@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VestaFlow — Intelligent Leasing & Portfolio Operations</title>
+  <meta name="description" content="VestaFlow, a responsive leasing and property operations dashboard template." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/dashboard.css" />
+  <script defer src="./assets/js/demo-data.js"></script>
+  <script defer src="./assets/js/views.js"></script>
+  <script defer src="./assets/js/dashboard.js"></script>
+</head>
+<body class="min-h-screen lg:p-3.5 flex items-center justify-center selection:bg-indigoPrimary selection:text-white">
+
+  <!-- Outer Rounded Dashboard Shell (1:1 Frame Match) -->
+  <div id="app-shell" class="w-full max-w-[1600px] h-screen lg:h-[calc(100vh-1.75rem)] bg-shell lg:rounded-[26px] shadow-shell border border-white/70 flex overflow-hidden relative">
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobile-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-obsidian/40 backdrop-blur-[2px] z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- Left Sidebar (Fixed width 232px on Desktop, Slide-over Drawer on Mobile) -->
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-[236px] shrink-0 bg-shell border-r border-borderSubtle/80 flex flex-col justify-between px-3.5 py-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
+      <div>
+        <!-- Brand Header -->
+        <div class="flex items-center justify-between px-1.5 mb-3.5">
+          <button onclick="navigateTo('dashboard')" class="flex items-center gap-2.5 group focus:outline-none">
+            <div class="w-7 h-7 rounded-full bg-obsidian flex items-center justify-center shadow-sm group-hover:bg-indigoPrimary transition-colors">
+              <!-- Custom Geometric Brand SVG Emblem -->
+              <svg class="w-3.5 h-3.5 text-citron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 20h16" />
+                <path d="M6 20V10a6 6 0 0 1 12 0v10" />
+                <path d="M10 20v-5a2 2 0 0 1 4 0v5" />
+              </svg>
+            </div>
+            <span class="text-[15.5px] font-bold tracking-tight text-obsidian">VestaFlow</span>
+          </button>
+          <button onclick="toggleMobileSidebar(false)" title="Toggle Sidebar" class="p-1.5 rounded-lg text-mutedText hover:text-obsidian hover:bg-black/5 transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Portfolio Switcher Pill -->
+        <div class="relative mb-3.5">
+          <button id="portfolio-btn" onclick="toggleDropdown('portfolio-menu')" class="w-full bg-white hover:bg-white/90 border border-borderSubtle rounded-xl px-2.5 py-2 flex items-center justify-between shadow-card transition-all">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-recessed border border-borderSubtle flex items-center justify-center shrink-0 text-obsidian">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <rect x="4" y="3" width="10" height="18" rx="1.5" />
+                  <path d="M14 9h5a1 1 0 0 1 1 1v11h-6" />
+                  <path d="M8 7h2M8 11h2M8 15h2" />
+                </svg>
+              </div>
+              <div class="text-left truncate">
+                <div id="active-portfolio-name" class="text-[12.5px] font-semibold text-obsidian leading-tight truncate">Crestline</div>
+                <div id="active-portfolio-sub" class="text-[10.5px] text-mutedText leading-tight mt-0.5">6 properties</div>
+              </div>
+            </div>
+            <svg class="w-3.5 h-3.5 text-mutedText shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <!-- Portfolio Dropdown -->
+          <div id="portfolio-menu" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-borderSubtle rounded-xl shadow-lg p-1.5 z-40">
+            <button onclick="selectPortfolio('Crestline', '6 properties')" class="w-full text-left px-2.5 py-1.5 rounded-lg text-[12px] font-medium hover:bg-recessed flex items-center justify-between text-obsidian">
+              <span>Crestline Portfolio</span>
+              <span class="text-[10px] bg-indigoSoft text-indigoPrimary px-1.5 py-0.5 rounded font-semibold">Active</span>
+            </button>
+            <button onclick="selectPortfolio('Northgate', '4 properties')" class="w-full text-left px-2.5 py-1.5 rounded-lg text-[12px] font-medium hover:bg-recessed flex items-center justify-between text-mutedText">
+              <span>Northgate Urban</span>
+              <span class="text-[10px]">4 props</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Primary Navigation -->
+        <nav id="sidebar-nav" class="space-y-0.5">
+          <!-- Rendered dynamically via JS so active pill & live counts always match -->
+        </nav>
+      </div>
+
+      <!-- Bottom Sidebar Cards: AI Status + User Profile -->
+      <div class="pt-4 space-y-2.5">
+        <!-- VestaFlow AI Status Card -->
+        <div class="bg-[#F2F6DF] border border-[#DCE6B5] rounded-2xl p-2.5 transition-all">
+          <div class="flex items-center justify-between pb-2 border-b border-[#DCE6B5]/80">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-obsidian text-citron flex items-center justify-center shrink-0">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-[11.5px] font-bold text-obsidian leading-tight">VestaFlow AI</div>
+                <div id="ai-status-sub" class="text-[10px] text-obsidian/70 leading-tight mt-0.5">On · 38 chats</div>
+              </div>
+            </div>
+            <!-- Interactive AI Toggle Switch -->
+            <button id="ai-toggle-btn" onclick="toggleAiAssistant()" aria-label="Toggle VestaFlow AI" class="w-9 h-5 rounded-full bg-obsidian p-0.5 flex items-center transition-colors cursor-pointer">
+              <span id="ai-toggle-dot" class="w-4 h-4 rounded-full bg-white shadow-sm transform translate-x-4 transition-transform"></span>
+            </button>
+          </div>
+          <button onclick="navigateTo('conversations')" class="w-full pt-2 flex items-center justify-between text-[11px] font-semibold text-obsidian hover:text-indigoPrimary transition-colors">
+            <span id="ai-review-count-label">4 need your review</span>
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- User Profile Card -->
+        <div class="bg-white border border-borderSubtle rounded-2xl p-2.5 flex items-center justify-between shadow-card">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="relative w-8 h-8 rounded-full overflow-hidden bg-indigoSoft border border-borderSubtle shrink-0 flex items-center justify-center">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                alt="Jordan Ellis"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <span class="hidden w-full h-full items-center justify-center text-[11px] font-bold text-indigoPrimary">JE</span>
+            </div>
+            <div class="min-w-0">
+              <div class="text-[12px] font-semibold text-obsidian truncate leading-tight">Jordan Ellis</div>
+              <div class="text-[10.5px] text-mutedText truncate leading-tight mt-0.5">Leasing Manager</div>
+            </div>
+          </div>
+          <button onclick="resetDemoData()" title="Reset Demo Data to Default" class="p-1.5 rounded-lg text-mutedText hover:text-indigoPrimary hover:bg-recessed transition-colors">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="5" r="1.2" />
+              <circle cx="12" cy="12" r="1.2" />
+              <circle cx="12" cy="19" r="1.2" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Right Content Area (Independent Vertical Scrolling) -->
+    <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+
+      <!-- Sticky Topbar -->
+      <header class="sticky top-0 z-30 bg-shell/95 backdrop-blur-md px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 border-b border-transparent">
+        <div class="flex items-center gap-3">
+          <!-- Mobile Menu Trigger -->
+          <button aria-label="Open navigation" onclick="toggleMobileSidebar(true)" class="lg:hidden p-2 rounded-xl bg-white border border-borderSubtle text-obsidian shadow-card">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div>
+            <h1 id="page-heading" class="text-[20px] sm:text-[23px] font-semibold tracking-[-0.02em] text-obsidian leading-tight">
+              Good morning, Jordan
+            </h1>
+          </div>
+        </div>
+
+        <!-- Center Pill Search Input -->
+        <div class="order-3 md:order-2 w-full md:w-[270px] lg:w-[310px]">
+          <div class="relative">
+            <svg class="w-3.5 h-3.5 text-mutedText absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              id="global-search-input"
+              aria-label="Search leads, units and tours"
+              type="text"
+              placeholder="Search leads, units, tours..."
+              oninput="handleGlobalSearch(this.value)"
+              class="w-full bg-white border border-borderSubtle/90 focus:border-indigoPrimary rounded-full pl-9 pr-4 py-2 text-[12.5px] text-obsidian placeholder:text-mutedText shadow-card focus:outline-none focus:ring-2 focus:ring-indigoPrimary/15 transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Right Header Controls -->
+        <div class="order-2 md:order-3 flex items-center gap-2">
+          <!-- Property Filter Pill -->
+          <div class="relative">
+            <button onclick="toggleDropdown('property-filter-menu')" class="bg-white hover:bg-white/90 border border-borderSubtle rounded-full px-3.5 py-2 text-[12px] font-medium text-obsidian flex items-center gap-2 shadow-card transition-all">
+              <svg class="w-3.5 h-3.5 text-mutedText" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="3" width="10" height="18" rx="1.5" />
+                <path d="M14 9h5a1 1 0 0 1 1 1v11h-6" />
+              </svg>
+              <span id="selected-property-label">All properties</span>
+              <svg class="w-3.5 h-3.5 text-mutedText" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div id="property-filter-menu" class="hidden absolute right-0 mt-1.5 w-48 bg-white border border-borderSubtle rounded-2xl shadow-lg p-1.5 z-40">
+              <button onclick="setPropertyFilter('ALL')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">All properties</button>
+              <button onclick="setPropertyFilter('The Alder')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">The Alder</button>
+              <button onclick="setPropertyFilter('Marlowe Court')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">Marlowe Court</button>
+              <button onclick="setPropertyFilter('Juniper Flats')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">Juniper Flats</button>
+              <button onclick="setPropertyFilter('Beacon Yard')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">Beacon Yard</button>
+              <button onclick="setPropertyFilter('Finch & Ninth')" class="w-full text-left px-3 py-1.5 rounded-xl text-[12px] font-medium hover:bg-recessed text-obsidian">Finch &amp; Ninth</button>
+            </div>
+          </div>
+
+          <!-- Notification Bell -->
+          <div class="relative">
+            <button aria-label="Notifications" onclick="toggleDropdown('notifications-popover')" class="w-9 h-9 rounded-full bg-white hover:bg-white/90 border border-borderSubtle flex items-center justify-center text-obsidian shadow-card relative transition-all">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="w-2 h-2 rounded-full bg-indigoPrimary ring-2 ring-white absolute top-2 right-2.5"></span>
+            </button>
+            <div id="notifications-popover" class="hidden absolute right-0 mt-1.5 w-72 bg-white border border-borderSubtle rounded-2xl shadow-lg p-3 z-40">
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-borderSubtle">
+                <span class="text-[12px] font-bold text-obsidian">Activity Alerts</span>
+                <button onclick="resetDemoData()" class="text-[11px] font-semibold text-indigoPrimary hover:underline">Reset Demo</button>
+              </div>
+              <div class="space-y-2 text-[11.5px]">
+                <div class="p-2 rounded-xl bg-recessed">
+                  <div class="font-semibold text-obsidian">Marcus Reed requested fee waiver</div>
+                  <div class="text-mutedText text-[10.5px] mt-0.5">Marlowe Court · High intent · 4m ago</div>
+                </div>
+                <div class="p-2 rounded-xl bg-recessed">
+                  <div class="font-semibold text-obsidian">Daniel Okafor uploaded ID</div>
+                  <div class="text-mutedText text-[10.5px] mt-0.5">Proof of income still needed · 22m ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary CTA Pill -->
+          <button onclick="navigateTo('leads')" class="bg-obsidian hover:bg-indigoPrimary text-white rounded-full px-4 py-2 text-[12px] font-semibold flex items-center gap-1.5 shadow-card transition-colors cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-citron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+            <span>View Leasing Pipeline</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Viewport -->
+      <main id="main-viewport" class="flex-1 overflow-y-auto px-4 sm:px-6 pb-6 space-y-4">
+        <!-- Dynamic SPA Content Injected Here -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Universal CRUD / Detail Modal -->
+  <div id="crud-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian/45 backdrop-blur-[2px] modal-backdrop">
+    <div class="bg-white border border-borderSubtle rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden modal-panel">
+      <div class="px-6 py-4 border-b border-borderSubtle flex items-center justify-between">
+        <div>
+          <h3 id="modal-title" class="text-[16px] font-bold text-obsidian">Create Record</h3>
+          <p id="modal-subtitle" class="text-[11.5px] text-mutedText mt-0.5">Fill in the details below to update your portfolio.</p>
+        </div>
+        <button aria-label="Close dialog" onclick="closeModal()" class="w-8 h-8 rounded-full bg-recessed hover:bg-borderSubtle flex items-center justify-center text-obsidian transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <form id="modal-form" onsubmit="handleModalSubmit(event)" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div id="modal-fields" class="space-y-3.5"></div>
+        <div class="pt-3 border-t border-borderSubtle flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-full border border-borderSubtle text-[12px] font-semibold text-obsidian hover:bg-recessed transition-colors">
+            Cancel
+          </button>
+          <button type="submit" id="modal-submit-btn" class="px-5 py-2 rounded-full bg-obsidian hover:bg-indigoPrimary text-white text-[12px] font-semibold transition-colors">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog for Delete -->
+  <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian/45 backdrop-blur-[2px]">
+    <div class="bg-white border border-borderSubtle rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+      <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-3.5">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+      </div>
+      <h4 class="text-[15px] font-bold text-obsidian">Confirm Deletion</h4>
+      <p id="confirm-message" class="text-[12.5px] text-mutedText mt-1">Are you sure you want to remove this record? This action updates all live pipeline metrics.</p>
+      <div class="mt-5 flex items-center justify-end gap-2">
+        <button onclick="closeConfirmModal()" class="px-4 py-2 rounded-full border border-borderSubtle text-[12px] font-semibold text-obsidian hover:bg-recessed">Cancel</button>
+        <button id="confirm-delete-btn" class="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-[12px] font-semibold">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+</body>
+</html>

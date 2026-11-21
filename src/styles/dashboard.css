@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #E5E5E0;
+  color: #181A2A;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Slim Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(24, 26, 42, 0.16);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.45);
+}
+
+/* Hatched Diagonal Bar matching screenshot pipeline */
+.hatched-bar {
+  background-color: #EFEFEB;
+  background-image: repeating-linear-gradient(
+    -52deg,
+    rgba(24, 26, 42, 0.11),
+    rgba(24, 26, 42, 0.11) 1.5px,
+    transparent 1.5px,
+    transparent 6px
+  );
+  border: 1px solid rgba(24, 26, 42, 0.08);
+}
+
+.hatched-bar-indigo {
+  background-color: #EEF2FF;
+  background-image: repeating-linear-gradient(
+    -52deg,
+    rgba(79, 70, 229, 0.22),
+    rgba(79, 70, 229, 0.22) 1.5px,
+    transparent 1.5px,
+    transparent 6px
+  );
+  border: 1px solid rgba(79, 70, 229, 0.18);
+}
+
+/* Crisp Corporate SaaS Entrance & Micro-interactions */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-enter {
+  opacity: 0;
+  animation: fadeSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.04s; }
+.delay-2 { animation-delay: 0.08s; }
+.delay-3 { animation-delay: 0.12s; }
+.delay-4 { animation-delay: 0.16s; }
+.delay-5 { animation-delay: 0.20s; }
+
+.kpi-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(24, 26, 42, 0.06);
+  border-color: rgba(79, 70, 229, 0.28);
+}
+
+.stage-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease;
+}
+.stage-card:hover {
+  transform: translateY(-2px);
+  background-color: #FFFFFF;
+  border-color: rgba(79, 70, 229, 0.3);
+  box-shadow: 0 6px 18px rgba(24, 26, 42, 0.05);
+}
+
+.progress-fill {
+  transition: width 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modal Backdrop Transition */
+.modal-backdrop {
+  transition: opacity 0.22s ease;
+}
+.modal-panel {
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
+}
+
+:focus-visible {
+  outline: 2px solid #4F46E5;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-enter { opacity: 1; animation: none; }
+  .kpi-card, .stage-card, .progress-fill, .modal-backdrop, .modal-panel { transition: none; }
+}

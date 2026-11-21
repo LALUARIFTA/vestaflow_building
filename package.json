@@ -1,0 +1,12 @@
+{
+  "name": "vestaflow-building",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i ./src/styles/dashboard.css -o ./frontend/assets/css/dashboard.css --minify",
+    "dev": "tailwindcss -i ./src/styles/dashboard.css -o ./frontend/assets/css/dashboard.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.19"
+  }
+}
